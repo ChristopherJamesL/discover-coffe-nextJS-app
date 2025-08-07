@@ -4,6 +4,8 @@
   --color-purple-951: rgba(79, 70, 229, 1);
   --color-gray-951: hsla(0, 0%, 100%, 0.4);
   --color-gray-952: #373b64;
+  --bg-coffee: url("/static/coffee.png");
+  --bg-mesh: url("/static/mesh-gradient.png");
 }
 
 html,
@@ -22,10 +24,12 @@ body {
     Droid Sans,
     Helvetica Neue,
     sans-serif;
-  background-image: var(--tw-gradient-stops);
-  background-size: cover;
-  background-position: 50% 50%;
-  background-repeat: repeat;
+  background-image: var(--bg-coffee), var(--bg-mesh);
+  background-size: 300px, cover;
+  background-position:
+    90% 10%,
+    50%;
+  background-repeat: no-repeat, repeat;
   height: 100%;
 }
 
