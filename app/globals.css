@@ -6,6 +6,7 @@
   --color-gray-952: #373b64;
   --bg-coffee: url("/static/coffee.png");
   --bg-mesh: url("/static/mesh-gradient.png");
+  --font-sans: var(--font-ibm-plex-sans);
 }
 
 html,
@@ -24,12 +25,10 @@ body {
     Droid Sans,
     Helvetica Neue,
     sans-serif;
-  background-image: var(--bg-coffee), var(--bg-mesh);
-  background-size: 300px, cover;
-  background-position:
-    90% 10%,
-    50%;
-  background-repeat: no-repeat, repeat;
+  background-image: var(--bg-mesh);
+  background-size: cover;
+  background-position: 50%;
+  background-repeat: repeat;
   height: 100%;
 }
 

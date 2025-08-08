@@ -6,6 +6,7 @@ const ibmPlexSans = IBM_Plex_Sans({
   subsets: ["latin"],
   weight: ["500", "600", "700"],
   display: "swap",
+  variable: "--font-ibm-plex-sans",
 });
 
 export const metadata: Metadata = {
@@ -19,8 +20,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${ibmPlexSans.className} antialiased`}>{children}</body>
+    <html lang="en" className={`${ibmPlexSans.variable} antialiased`}>
+      <body>{children}</body>
     </html>
   );
 }
