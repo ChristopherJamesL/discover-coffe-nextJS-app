@@ -25,11 +25,14 @@ body {
     Droid Sans,
     Helvetica Neue,
     sans-serif;
+  height: 100%;
+}
+
+html {
   background-image: var(--bg-mesh);
   background-size: cover;
   background-position: 50%;
   background-repeat: repeat;
-  height: 100%;
 }
 
 h1 {

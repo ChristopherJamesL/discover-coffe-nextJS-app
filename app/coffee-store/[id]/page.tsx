@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 export default function Page(props: { params: { id: string } }) {
   const {
@@ -6,5 +7,14 @@ export default function Page(props: { params: { id: string } }) {
   } = props;
   console.log("id: ", id);
 
-  return <div>Coffee Store Page: {id}</div>;
+  return (
+    <div className="h-full pb-80">
+      Coffee Store Page: {id}
+      <div className="m-auto grid max-w-full px-12 py-12 lg:max-w-6xl lg:grid-cols-2 lg:gap-4">
+        <div className="mb-2 mt-24 text-lg font-bold">
+          <Link href="/">🔙 Go back to Home</Link>
+        </div>
+      </div>
+    </div>
+  );
 }
