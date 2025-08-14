@@ -1,15 +1,20 @@
-import type { MapboxType } from "@/types";
+import type { CoffeeStoreType, MapboxType, UnsplashPhotoType } from "@/types";
 
-const transformCoffeeData = (data: MapboxType) => {
+const transformCoffeeData = (
+  data: MapboxType,
+  index: number,
+  images: string[]
+) => {
   const {
     properties: { name, mapbox_id, address },
   } = data;
+  const imageFallback =
+    "https://plus.unsplash.com/premium_photo-1705091308398-42be44086a79?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Y29mZmVlJTIwdHJvbGx8ZW58MHx8MHx8fDA%3D";
   return {
     name,
     mapbox_id,
     address,
-    imgUrl:
-      "https://images.unsplash.com/photo-1504753793650-d4a2b783c15e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80",
+    imgUrl: images?.[index] || imageFallback,
   };
 };
 
@@ -19,12 +24,57 @@ export const fetchCoffeeStores = async () => {
       `https://api.mapbox.com/search/searchbox/v1/forward?q=coffee+shop&limit=6&proximity=-79.3832%2C43.6532&types=poi&poi_category=coffee_shop&access_token=${process.env.MAPBOX_API_TOKEN}`
     );
     const data = await response.json();
-    return data.features.map((feature: MapboxType) =>
-      transformCoffeeData(feature)
-    );
 
-    // return await response.json();
+    const images = await fetchUnsplashImages();
+
+    return data.features.map((feature: MapboxType, index: number) =>
+      transformCoffeeData(feature, index, images)
+    );
   } catch (e) {
     console.error("Error while fetching coffee stores", e);
+  }
+};
+
+export const fetchCoffeeStore = async (id: string) => {
+  try {
+    const response = await fetch(
+      `https://api.mapbox.com/search/searchbox/v1/forward?q=coffee+shop&limit=6&proximity=-79.3832%2C43.6532&types=poi&poi_category=coffee_shop&access_token=${process.env.MAPBOX_API_TOKEN}`
+    );
+    const data = await response.json();
+
+    const images = await fetchUnsplashImages();
+
+    const coffeeStores = data.features.map(
+      (feature: MapboxType, index: number) =>
+        transformCoffeeData(feature, index, images)
+    );
+
+    const coffeeStore = coffeeStores.find(
+      (store: CoffeeStoreType) => store.mapbox_id === id
+    );
+
+    return coffeeStore || null;
+  } catch (e) {
+    console.error("Error while fetching coffee stores", e);
+    return null;
+  }
+};
+
+const fetchUnsplashImages = async () => {
+  try {
+    const response = await fetch(
+      `https://api.unsplash.com/search/photos?query=coffee%20shop&per_page=5&client_id=${process.env.UNSPLASH_ACCESS_KEY}`
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch Unsplash images");
+    }
+
+    const data = await response.json();
+
+    return data.results.map((result: UnsplashPhotoType) => result.urls.small);
+  } catch (e) {
+    console.error("Error fetching Unsplash images", e);
+    return [];
   }
 };

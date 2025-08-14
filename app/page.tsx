@@ -19,14 +19,14 @@ export default async function Home() {
             Toronto Stores
           </h2>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-2 lg:grid-cols-3 lg:gap-6">
-            {coffeeStores.map((store: CoffeeStoreType, index: number) => {
-              const { name, imgUrl } = store;
+            {coffeeStores.map((store: CoffeeStoreType) => {
+              const { name, imgUrl, mapbox_id } = store;
               return (
                 <Card
-                  key={`${name}-${index}`}
+                  key={`${name}-${mapbox_id}`}
                   name={name}
                   imgUrl={imgUrl}
-                  href={`/coffee-store/${index}`}
+                  href={`/coffee-store/${mapbox_id}`}
                 />
               );
             })}

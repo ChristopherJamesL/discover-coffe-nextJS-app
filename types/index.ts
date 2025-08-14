@@ -12,3 +12,9 @@ export type MapboxType = {
     address: string;
   };
 };
+
+export type UnsplashPhotoType = {
+  urls: {
+    small: string;
+  };
+};
