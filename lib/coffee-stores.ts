@@ -20,10 +20,10 @@ const transformCoffeeData = (
   };
 };
 
-export const fetchCoffeeStores = async () => {
+export const fetchCoffeeStores = async (longLat: string, limit: number) => {
   try {
     const response = await fetch(
-      `https://api.mapbox.com/search/searchbox/v1/forward?q=coffee+shop&limit=6&proximity=-79.3832%2C43.6532&types=poi&poi_category=coffee_shop&access_token=${process.env.MAPBOX_API_TOKEN}`
+      `https://api.mapbox.com/search/searchbox/v1/forward?q=coffee+shop&limit=${limit}&proximity=${longLat}&types=poi&poi_category=coffee_shop&access_token=${process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}`
     );
     const data = await response.json();
 
@@ -65,7 +65,7 @@ export const fetchCoffeeStore = async (id: string) => {
 const fetchUnsplashImages = async () => {
   try {
     const response = await fetch(
-      `https://api.unsplash.com/search/photos?query=coffee%20shop&per_page=5&client_id=${process.env.UNSPLASH_ACCESS_KEY}`
+      `https://api.unsplash.com/search/photos?query=coffee%20shop&per_page=5&client_id=${process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY}`
     );
 
     if (!response.ok) {

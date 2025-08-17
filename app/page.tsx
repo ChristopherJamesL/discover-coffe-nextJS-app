@@ -4,7 +4,8 @@ import type { CoffeeStoreType } from "@/types";
 import NearbyCoffeeStores from "@/components/nearby-coffee-stores.client";
 
 async function getData() {
-  return await fetchCoffeeStores();
+  const TORONTO_LONG_LAT = "-79.3832%2C43.6532";
+  return await fetchCoffeeStores(TORONTO_LONG_LAT, 6);
 }
 
 export default async function Home() {
