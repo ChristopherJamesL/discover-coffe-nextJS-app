@@ -1,6 +1,5 @@
 import { fetchCoffeeStores } from "@/lib/coffee-stores";
 import { NextRequest, NextResponse } from "next/server";
-import { search } from "unsplash-js/dist/internals";
 
 export async function GET(request: NextRequest, response: NextResponse) {
   let limit: number = 0;

@@ -4,12 +4,13 @@ import { fetchCoffeeStore, fetchCoffeeStores } from "@/lib/coffee-stores";
 import Image from "next/image";
 import type { CoffeeStoreType } from "@/types";
 
-async function getData(id: string) {
-  return await fetchCoffeeStore(id);
+async function getData(id: string, longLat: string, limit: number) {
+  return await fetchCoffeeStore(id, longLat, limit);
 }
 
 export async function generateStaticParams() {
-  const coffeeStores = await fetchCoffeeStores();
+  const TORONTO_LONG_LAT = "-79.3832%2C43.6532";
+  const coffeeStores = await fetchCoffeeStores(TORONTO_LONG_LAT, 6);
 
   return coffeeStores.map((coffeeStore: CoffeeStoreType) => ({
     id: coffeeStore.mapbox_id,
@@ -18,12 +19,31 @@ export async function generateStaticParams() {
 
 export default async function Page({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams?: Promise<{ longLat?: string; limit?: string }>;
 }) {
   const { id } = await params;
+  const sp = searchParams ? await searchParams : {};
+  const longLat = sp.longLat || "-79.3832%2C43.6532";
+  const limit = parseInt(sp.limit || "6");
 
-  const { name = "", address = "", imgUrl = "" } = await getData(id);
+  const coffeeStore = await getData(id, longLat, limit);
+
+  if (!coffeeStore) {
+    return (
+      <div className="text-white text-center py-20">
+        <h1 className="text-3xl font-bold">Store not found</h1>
+        <p className="mt-4">Could not find a coffee store with that ID.</p>
+        <Link href="/" className="text-blue-400 underline mt-6 inline-block">
+          ← Back to Home
+        </Link>
+      </div>
+    );
+  }
+
+  const { name = "", address = "", imgUrl = "" } = coffeeStore;
 
   return (
     <div className="h-full pb-80">

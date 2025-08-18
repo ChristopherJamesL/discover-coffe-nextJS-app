@@ -5,7 +5,6 @@ import Banner from "./banner.client";
 import useTrackLocation from "@/hooks/use-track-location";
 import Card from "./card.server";
 import { CoffeeStoreType } from "@/types";
-import { fetchCoffeeStores } from "@/lib/coffee-stores";
 
 export default function NearbyCoffeeStores() {
   const [coffeeStores, setCoffeeStores] = useState([]);
@@ -16,7 +15,20 @@ export default function NearbyCoffeeStores() {
   const positionLocator = () => handleTrackLocation();
 
   useEffect(() => {
-    async function coffeeStoresByLocation() {}
+    async function coffeeStoresByLocation() {
+      if (longLat) {
+        try {
+          const limit = 10;
+          const response = await fetch(
+            `/api/getCoffeeStoresByLocation?longLat=${longLat}&limit=${limit}`
+          );
+          const coffeeStores = await response.json();
+          setCoffeeStores(coffeeStores);
+        } catch (e) {
+          console.error("error fetching route: ", e);
+        }
+      }
+    }
     coffeeStoresByLocation();
   }, [longLat]);
 
@@ -28,24 +40,27 @@ export default function NearbyCoffeeStores() {
       />
       {locationErrorMsg && <p>Error: {locationErrorMsg}</p>}
 
-      <div className="mt-20">
-        <h2 className="mt-8 pb-8 text-4xl font-bold text-white">
-          Stores near me
-        </h2>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-2 lg:grid-cols-3 lg:gap-6">
-          {coffeeStores.map((store: CoffeeStoreType) => {
-            const { name, imgUrl, mapbox_id } = store;
-            return (
-              <Card
-                key={`${name}-${mapbox_id}`}
-                name={name}
-                imgUrl={imgUrl}
-                href={`/coffee-store/${mapbox_id}`}
-              />
-            );
-          })}
+      {coffeeStores.length > 0 && (
+        <div className="mt-20">
+          <h2 className="mt-8 pb-8 text-4xl font-bold text-white">
+            Stores near me
+          </h2>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-2 lg:grid-cols-3 lg:gap-6">
+            {coffeeStores.map((store: CoffeeStoreType) => {
+              console.log("store: ", store);
+              const { name, imgUrl, mapbox_id } = store;
+              return (
+                <Card
+                  key={`${name}-${mapbox_id}`}
+                  name={name}
+                  imgUrl={imgUrl}
+                  href={`/coffee-store/${mapbox_id}?longLat=${longLat}&limit=10`}
+                />
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
