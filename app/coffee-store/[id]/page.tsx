@@ -3,9 +3,12 @@ import Link from "next/link";
 import { fetchCoffeeStore, fetchCoffeeStores } from "@/lib/coffee-stores";
 import Image from "next/image";
 import type { CoffeeStoreType } from "@/types";
+import { findRecordByFilter } from "@/lib/airtable";
 
 async function getData(id: string, longLat: string, limit: number) {
-  return await fetchCoffeeStore(id, longLat, limit);
+  const coffeeStoreFromMapbox = await fetchCoffeeStore(id, longLat, limit);
+  const createCoffeeStore = findRecordByFilter(id);
+  return coffeeStoreFromMapbox;
 }
 
 export async function generateStaticParams() {

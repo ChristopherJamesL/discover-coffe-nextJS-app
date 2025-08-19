@@ -1,7 +1,7 @@
 import { fetchCoffeeStores } from "@/lib/coffee-stores";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest, response: NextResponse) {
+export async function GET(request: NextRequest) {
   let limit: number = 0;
   try {
     const searchParams = request.nextUrl.searchParams;

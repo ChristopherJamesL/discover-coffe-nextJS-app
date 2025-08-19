@@ -26,7 +26,7 @@ export const fetchCoffeeStores = async (longLat: string, limit: number) => {
       `https://api.mapbox.com/search/searchbox/v1/forward?q=coffee+shop&limit=${limit}&proximity=${longLat}&types=poi&poi_category=coffee_shop&access_token=${process.env.MAPBOX_API_TOKEN}`
     );
     const data = await response.json();
-    console.log("data: ", data);
+    // console.log("data: ", data);
 
     const images = await fetchUnsplashImages();
 

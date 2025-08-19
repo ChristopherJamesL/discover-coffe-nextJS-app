@@ -3,6 +3,7 @@ export type CoffeeStoreType = {
   mapbox_id: string;
   address: string;
   imgUrl: string;
+  voting?: number;
 };
 
 export type MapboxType = {
@@ -17,4 +18,9 @@ export type UnsplashPhotoType = {
   urls: {
     small: string;
   };
+};
+
+export type AirTableRecordType = {
+  recordId: string;
+  fields: CoffeeStoreType;
 };

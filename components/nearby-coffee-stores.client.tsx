@@ -47,7 +47,7 @@ export default function NearbyCoffeeStores() {
           </h2>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-2 lg:grid-cols-3 lg:gap-6">
             {coffeeStores.map((store: CoffeeStoreType) => {
-              console.log("store: ", store);
+              // console.log("store: ", store);
               const { name, imgUrl, mapbox_id } = store;
               return (
                 <Card

@@ -21,7 +21,7 @@ const useTrackLocation = () => {
 
     setIsFindingLocation(false);
     setLocationErrorMsg("");
-    console.log(`Latitude: ${latitude} °, Longitude: ${longitude} °`);
+    // console.log(`Latitude: ${latitude} °, Longitude: ${longitude} °`);
   }
 
   function error() {
