@@ -3,12 +3,20 @@ import Link from "next/link";
 import { fetchCoffeeStore, fetchCoffeeStores } from "@/lib/coffee-stores";
 import Image from "next/image";
 import type { CoffeeStoreType } from "@/types";
-import { findRecordByFilter } from "@/lib/airtable";
+import { createCoffeeStore } from "@/lib/airtable";
+import Upvote from "@/components/upvote.client";
 
 async function getData(id: string, longLat: string, limit: number) {
   const coffeeStoreFromMapbox = await fetchCoffeeStore(id, longLat, limit);
-  const createCoffeeStore = findRecordByFilter(id);
-  return coffeeStoreFromMapbox;
+  const _createCoffeeStore = await createCoffeeStore(coffeeStoreFromMapbox, id);
+  console.log("CREATE COFFEE STORE", _createCoffeeStore);
+  const voting = _createCoffeeStore ? _createCoffeeStore[0].voting : 0;
+  return coffeeStoreFromMapbox
+    ? {
+        ...coffeeStoreFromMapbox,
+        voting,
+      }
+    : {};
 }
 
 export async function generateStaticParams() {
@@ -46,7 +54,7 @@ export default async function Page({
     );
   }
 
-  const { name = "", address = "", imgUrl = "" } = coffeeStore;
+  const { name = "", address = "", imgUrl = "", voting } = coffeeStore;
 
   return (
     <div className="h-full pb-80">
@@ -76,6 +84,7 @@ export default async function Page({
               <p className="pl-2">{address}</p>
             </div>
           )}
+          <Upvote voting={voting} />
         </div>
       </div>
     </div>

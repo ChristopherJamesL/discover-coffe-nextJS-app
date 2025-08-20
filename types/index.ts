@@ -3,7 +3,7 @@ export type CoffeeStoreType = {
   mapbox_id: string;
   address: string;
   imgUrl: string;
-  voting?: number;
+  voting: number;
 };
 
 export type MapboxType = {
