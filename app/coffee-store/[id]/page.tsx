@@ -9,7 +9,6 @@ import Upvote from "@/components/upvote.client";
 async function getData(id: string, longLat: string, limit: number) {
   const coffeeStoreFromMapbox = await fetchCoffeeStore(id, longLat, limit);
   const _createCoffeeStore = await createCoffeeStore(coffeeStoreFromMapbox, id);
-  console.log("CREATE COFFEE STORE", _createCoffeeStore);
   const voting = _createCoffeeStore ? _createCoffeeStore[0].voting : 0;
   return coffeeStoreFromMapbox
     ? {
@@ -84,7 +83,7 @@ export default async function Page({
               <p className="pl-2">{address}</p>
             </div>
           )}
-          <Upvote voting={voting} />
+          <Upvote voting={voting} id={id} />
         </div>
       </div>
     </div>

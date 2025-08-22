@@ -1,13 +1,23 @@
 "use client";
 
+import { upvoteAction } from "@/actions";
 import Image from "next/image";
+import { useActionState } from "react";
 
-export default function Upvote({ voting }: { voting: number }) {
-  const handleClick = () => {
-    console.log("Click!");
-  };
+type State = {
+  voting: number;
+  id: string;
+};
+
+export default function Upvote({ voting, id }: State) {
+  const initialState = { voting, id };
+  const [state, formAction, isPending] = useActionState(
+    upvoteAction as (state: State, formData: FormData) => Promise<State>,
+    initialState
+  );
+
   return (
-    <>
+    <form action={formAction}>
       <div className="mb-6 flex">
         <Image
           className="border border-black bg-red-700"
@@ -16,9 +26,14 @@ export default function Upvote({ voting }: { voting: number }) {
           height="24"
           alt="star icon"
         />
-        <p className="pl-2">{voting}</p>
+        <p className="pl-2">{state.voting}</p>
       </div>
-      <button onClick={handleClick}>Up vote!</button>
-    </>
+      <button
+        disabled={isPending}
+        className="min-w-[120px] disabled:opacity-50 disabled:min-w-[120px]"
+      >
+        {isPending ? "voting..." : "Up vote!"}
+      </button>
+    </form>
   );
 }

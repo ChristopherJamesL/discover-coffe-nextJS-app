@@ -11,7 +11,6 @@ const getMinifiedRecords = (
   records: ReadonlyArray<AirtableRecord<CoffeeStoreType>>
 ) => {
   return records.map((record) => {
-    console.log("RECORDS: ", record.fields);
     return {
       recordId: record.id,
       ...record.fields,
@@ -67,6 +66,40 @@ export const createCoffeeStore = async (
     }
   } catch (e) {
     console.error("Error creating or finding a store", e);
+  }
+  return [];
+};
+
+export const updateCoffeeStore = async (id: string) => {
+  try {
+    if (id) {
+      const records = await findRecordByFilter(id);
+      if (records.length !== 0) {
+        const record = records[0];
+        // console.log("record: ", record);
+        const updatedVoting = record.voting + 1;
+        const updatedRecords = await table.update([
+          {
+            id: record.recordId,
+            fields: {
+              voting: updatedVoting,
+            },
+          },
+        ]);
+        if (updatedRecords.length > 0) {
+          console.log("Updated a store with id", id);
+          return getMinifiedRecords(
+            updatedRecords as unknown as AirtableRecord<CoffeeStoreType>[]
+          );
+        }
+      } else {
+        console.log("Coffee Store Does Not Exists");
+      }
+    } else {
+      console.error("Store id is missing");
+    }
+  } catch (e) {
+    console.error("Error upvoting a store", e);
   }
   return [];
 };
