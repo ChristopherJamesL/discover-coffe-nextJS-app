@@ -1,5 +1,5 @@
 export type CoffeeStoreType = {
-  name: string;
+  name: string | null;
   mapbox_id: string;
   address: string;
   imgUrl: string;
@@ -23,4 +23,9 @@ export type UnsplashPhotoType = {
 export type AirTableRecordType = {
   recordId: string;
   fields: CoffeeStoreType;
+};
+
+export type ServerParamsType = {
+  params: Promise<{ id: string }>;
+  searchParams?: Promise<{ longLat?: string; limit?: string }>;
 };

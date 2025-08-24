@@ -21,7 +21,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${ibmPlexSans.variable} antialiased`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <footer className="bg-gray-100 text-center text-sm text-gray-600 py-4">
+          © {new Date().getFullYear()} Coffee Connoisseur. All rights reserved.
+        </footer>
+      </body>
     </html>
   );
 }

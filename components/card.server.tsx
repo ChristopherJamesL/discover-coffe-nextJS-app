@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 type CardType = {
-  name: string;
+  name: string | null;
   imgUrl: string;
   href: string;
 };
@@ -25,7 +25,7 @@ export default function Card({ name, imgUrl, href }: CardType) {
             src={imgUrl}
             width={260}
             height={160}
-            alt={name}
+            alt={name ?? "Coffee store image"}
           />
         </div>
       </div>

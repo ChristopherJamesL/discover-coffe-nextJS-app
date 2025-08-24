@@ -46,14 +46,14 @@ export const fetchCoffeeStore = async (
   id: string,
   longLat: string,
   limit: number
-) => {
+): Promise<CoffeeStoreType | null> => {
   try {
     const coffeeStores = await fetchCoffeeStores(longLat, limit);
 
     const coffeeStore = coffeeStores.find(
       (store: CoffeeStoreType) => store.mapbox_id === id
     );
-
+    console.log("COFFEE STORE", coffeeStore);
     return coffeeStore || null;
   } catch (e) {
     console.error("Error while fetching coffee stores", e);

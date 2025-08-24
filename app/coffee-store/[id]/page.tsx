@@ -2,20 +2,21 @@ import React from "react";
 import Link from "next/link";
 import { fetchCoffeeStore, fetchCoffeeStores } from "@/lib/coffee-stores";
 import Image from "next/image";
-import type { CoffeeStoreType } from "@/types";
+import type { CoffeeStoreType, ServerParamsType } from "@/types";
 import { createCoffeeStore } from "@/lib/airtable";
 import Upvote from "@/components/upvote.client";
+import { getDomain } from "@/utils";
+import { Metadata } from "next";
 
 async function getData(id: string, longLat: string, limit: number) {
   const coffeeStoreFromMapbox = await fetchCoffeeStore(id, longLat, limit);
+  if (!coffeeStoreFromMapbox) return null;
   const _createCoffeeStore = await createCoffeeStore(coffeeStoreFromMapbox, id);
   const voting = _createCoffeeStore ? _createCoffeeStore[0].voting : 0;
-  return coffeeStoreFromMapbox
-    ? {
-        ...coffeeStoreFromMapbox,
-        voting,
-      }
-    : {};
+  return {
+    ...coffeeStoreFromMapbox,
+    voting,
+  };
 }
 
 export async function generateStaticParams() {
@@ -27,18 +28,38 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function Page({
-  params,
-  searchParams,
-}: {
-  params: Promise<{ id: string }>;
-  searchParams?: Promise<{ longLat?: string; limit?: string }>;
-}) {
+async function getStoreParams({ params, searchParams }: ServerParamsType) {
   const { id } = await params;
   const sp = searchParams ? await searchParams : {};
   const longLat = sp.longLat || "-79.3832%2C43.6532";
   const limit = parseInt(sp.limit || "6");
+  return {
+    id,
+    longLat,
+    limit,
+  };
+}
 
+export async function generateMetadata({
+  params,
+  searchParams,
+}: ServerParamsType) {
+  const { id, longLat, limit } = await getStoreParams({ params, searchParams });
+  const coffeeStoreFromMapbox = await fetchCoffeeStore(id, longLat, limit);
+  const { name = "Coffee Store" } = coffeeStoreFromMapbox || {};
+
+  return {
+    title: name,
+    description: `${name} - Coffee Store`,
+    metadataBase: getDomain(),
+    alternates: {
+      canonical: `/coffee-store/${id}`,
+    },
+  };
+}
+
+export default async function Page({ params, searchParams }: ServerParamsType) {
+  const { id, longLat, limit } = await getStoreParams({ params, searchParams });
   const coffeeStore = await getData(id, longLat, limit);
 
   if (!coffeeStore) {
